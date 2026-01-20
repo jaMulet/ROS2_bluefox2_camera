@@ -1,0 +1,31 @@
+/**:
+  ros__parameters:
+    serial: '29700299'
+    mode: 'master'
+    frame_id: ''
+
+    mm: 0
+    
+    fps: 5.8
+    width: 0
+    height: 0
+    
+    idpf: 1
+    cbm: 0
+    aec: false
+    expose_us: 10000
+    agc: false
+    gain_db: 0.0
+    acs: 0
+    des_grey_value: 85
+    hdr: false
+    dcfm: 0
+    cpc: 40000
+    ctm: 1
+    cts: -1
+    request: 0
+    wbp: 6
+    
+    r_gain: 1
+    g_gain: 1
+    b_gain: 1
