@@ -2,7 +2,7 @@
 
 ## Overview
 
-C++ packages and ROS2 wrappers to obtain images from the BlueFOX2 cameras. This repository is based on the [bluefox2][1]https://github.com/KumarRobotics/bluefox2 library.
+C++ packages and ROS2 wrappers to obtain images from the BlueFOX2 cameras. This repository is based on the [bluefox2](https://github.com/KumarRobotics/bluefox2) library.
 
 This repository consists of following packages:
 
@@ -11,14 +11,14 @@ This repository consists of following packages:
 
 ### bluefox2
 
-Contains main source files to communicate with bluefox2 driver API. This package requires the bluefox driver to be installed, following the [Balluff technical documentation][2]https://assets.balluff.com/MV_Manuals/online/mvBlueFOX/mvBF_quickstart_software.html (prevously [Matrix Vision][3]https://www.balluff.com/en-de/focus-topics/balluff-mv) for BVS CA and MLC camera models. A *.cmake* configuration file has been implemented that looks for driver libraries and includes in the default installation folder (i.e. */opt/mvIMPACT_Acquire*). Change it accordingly to your own installation.
+Contains main source files to communicate with bluefox2 driver API. This package requires the bluefox driver to be installed, following the [Balluff technical documentation](https://assets.balluff.com/MV_Manuals/online/mvBlueFOX/mvBF_quickstart_software.html) (prevously [Matrix Vision](https://www.balluff.com/en-de/focus-topics/balluff-mv)) for BVS CA and MLC camera models. A *.cmake* configuration file has been implemented that looks for driver libraries and includes in the default installation folder (i.e. */opt/mvIMPACT_Acquire*). Change it accordingly to your own installation.
 
 ### bluefox2_ros
 
 All ROS2-related files are in this folder. It contains the main launcher to run the source code as a unique node. It also contains a configuration folder that stores:
 
 * *Camera configuration file* (file name format: *camera_'device name'.config.yaml*). Defines all configuration parameters to be loaded as parameters during start-up.
-* *Camera calibration file* (file name format: *calib_'device name'.yaml*). Contains a calibration file for this camera, for example, using the [ROS-perception's image_pipeline package][4]https://github.com/ros-perception/image_pipeline/tree/rolling.
+* *Camera calibration file* (file name format: *calib_'device name'.yaml*). Contains a calibration file for this camera, for example, using the [ROS-perception's image_pipeline package](https://github.com/ros-perception/image_pipeline/tree/rolling).
 
 ## ROS2 API
 
@@ -45,8 +45,8 @@ Outputs diagnistic messages based on the *diagnostic_updater* package.
 
 Included in the 'camera configuration file', and are:
 
-1. `serial` (string).
-2. `mode` (string).
+1. `serial` (string). Device serial number.
+2. `mode` (string). Device mode ['master' or 'slave'].
 3. `frame_id` (string).
 4. `mm` (integer). Sets mirror mode.
    * mm_off = 0: mirror mode off".
@@ -83,7 +83,7 @@ Included in the 'camera configuration file', and are:
     * dcfm_on = 1: filter is switched on.
     * dcfm_calibrate = 2: calculate dark current corrention image.
     * correction_image = 3: replace captured image with the last correction image.
-18. `cpc` (integer). Defines valid camrea pixel frequencies.
+18. `cpc` (integer). Defines valid camera pixel frequencies.
     * cpc_12000 = 12000: 12 Mhz.
     * cpc_20000 = 20000: 20 Mhz.
     * cpc_24000 = 24000: 24 Mhz.
@@ -133,8 +133,3 @@ Tentative arguments are:
 
 * *device* (or 'device name'). Only used when looking for configuration and calibration file by name. This is, files' name must match whit the name given here.
 * *namespace*. Gives a namespace to the node when running multiple cameras.
-
-[3]: https://www.balluff.com/en-de/focus-topics/balluff-mv
-[2]: https://assets.balluff.com/MV_Manuals/online/mvBlueFOX/mvBF_quickstart_software.html
-[1]: https://github.com/KumarRobotics/bluefox2
-[4]: https://github.com/ros-perception/image_pipeline/tree/rolling
