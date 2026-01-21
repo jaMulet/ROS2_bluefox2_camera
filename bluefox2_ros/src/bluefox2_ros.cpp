@@ -81,7 +81,7 @@ namespace bluefox2 {
     bluefox2_.SetMM(this->get_parameter("mm").as_int());
 
     // Store other config values
-    std::string frame_id = this->get_parameter("frame_id").as_string();
+    frame_id_ = this->get_parameter("frame_id").as_string();
     config_.fps = this->get_parameter("fps").as_double();
     config_.width = this->get_parameter("width").as_int();
     config_.height = this->get_parameter("height").as_int();
