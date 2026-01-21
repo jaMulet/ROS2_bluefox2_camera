@@ -42,7 +42,9 @@ def generate_launch_description():
         namespace=namespace,
         package="bluefox2_ros",
         executable="bluefox2_ros",
-        parameters=[config_file_path, camera_calib_path]
+        parameters=[config_file_path,
+                    {"camera_calibration_file": camera_calib_path}
+                    ]
     )
     
     return LaunchDescription([

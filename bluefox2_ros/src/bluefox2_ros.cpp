@@ -27,7 +27,6 @@ namespace bluefox2 {
                                                                        config_(),
                                                                        node_handle_(std::shared_ptr<Bluefox2Ros>(this, [](auto *) {})),
                                                                        it_(node_handle_),
-                                                                       image_pub_(it_.advertise("camera/image_raw", 10)),
                                                                        diagnostic_updater_(node_handle_),
                                                                        topic_diagnostic_(prefix.empty() ? "image_raw" : (prefix + "/image_raw"),
                                                                           diagnostic_updater_,
@@ -58,9 +57,15 @@ namespace bluefox2 {
     this->declare_parameter("r_gain", rclcpp::PARAMETER_INTEGER);
     this->declare_parameter("g_gain", rclcpp::PARAMETER_INTEGER);
     this->declare_parameter("b_gain", rclcpp::PARAMETER_INTEGER);
+    this->declare_parameter("camera_calibration_file", rclcpp::PARAMETER_STRING);
 
     //From camera_ros_base.h   
+    rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_sensor_data;
+    camera_pub_ = image_transport::create_camera_publisher(this, "image_raw", custom_qos_profile);
     cinfo_mgr_ = std::make_shared<camera_info_manager::CameraInfoManager>(this);
+
+    auto camera_calibration_file_param_ = this->get_parameter("camera_calibration_file").as_string();
+    cinfo_mgr_->loadCameraInfo(camera_calibration_file_param_);
 
     bluefox2_.SetSerial(this->get_parameter("serial").as_string());
     SetHardwareId(bluefox2_.serial());
@@ -190,15 +195,15 @@ namespace bluefox2 {
     auto image_msg = std::make_shared<sensor_msgs::msg::Image>();
     auto cinfo_msg = std::make_shared<sensor_msgs::msg::CameraInfo>(cinfo_mgr_->getCameraInfo());
     
-    // image_msg.header.frame_id = frame_id_;
-    // image_msg.header.stamp = time;
-    
+    image_msg->header.frame_id = frame_id_;
+    image_msg->header.stamp = time;
+    cinfo_msg->header.frame_id = frame_id_;
+    cinfo_msg->header.stamp = time;
+
     if (Bluefox2Ros::Grab(image_msg)) {
 
-      // Update camera info header
-      Update_msg(image_msg, *cinfo_msg);
 
-      image_pub_.publish(image_msg);
+      camera_pub_.publish(image_msg, cinfo_msg);
 
       topic_diagnostic_.tick();
 
@@ -218,10 +223,10 @@ namespace bluefox2 {
     
     auto cinfo_msg = std::make_shared<sensor_msgs::msg::CameraInfo>(cinfo_mgr_->getCameraInfo());
 
-    // Update camera info header
-    Update_msg(image_msg, *cinfo_msg);
+    image_msg->header.frame_id = frame_id_;
+    cinfo_msg->header.frame_id = frame_id_;
 
-    image_pub_.publish(image_msg);
+    camera_pub_.publish(image_msg, cinfo_msg);
     
     topic_diagnostic_.tick();
 
@@ -268,19 +273,6 @@ namespace bluefox2 {
     if (!is_acquire_) return;
     is_acquire_ = false;
     acquire_thread_->join();
-  }
-
-  /**************************************************************************
-  * UpdateMSG function
-  **************************************************************************/
-  void Bluefox2Ros::Update_msg(sensor_msgs::msg::Image::SharedPtr& msg, sensor_msgs::msg::CameraInfo & camera_info_msg)
-  {
-    rclcpp::Time timestamp = this->get_clock()->now();
-    
-    msg->header.frame_id = frame_id_;
-    msg->header.stamp = timestamp;
-    camera_info_msg.header.frame_id = frame_id_;
-    camera_info_msg.header.stamp = timestamp;
   }
 
 }  // namespace bluefox2

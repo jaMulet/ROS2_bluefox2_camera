@@ -17,27 +17,33 @@ Contains main source files to communicate with bluefox2 driver API. This package
 
 All ROS2-related files are in this folder. It contains the main launcher to run the source code as a unique node. It also contains a configuration folder that stores:
 
-* *Camera configuration file* (file name format: *camera_'device name'.config.yaml*). Defines all configuration parameters to be loaded as parameters during start-up.
-* *Camera calibration file* (file name format: *calib_'device name'.yaml*). Contains a calibration file for this camera, for example, using the [ROS-perception's image_pipeline package](https://github.com/ros-perception/image_pipeline/tree/rolling).
+* *Camera configuration file* (file name format: `camera_'device name'.config.yaml`). Defines all configuration parameters to be loaded as parameters during start-up.
+* *Camera calibration file* (file name format: `calib_'device name'.yaml`). Contains a calibration file for this camera, for example, using the [ROS-perception's image_pipeline package](https://github.com/ros-perception/image_pipeline/tree/rolling).
 
 ## ROS2 API
 
 ### Topics
 
-* `/camera/image_raw`
+* `/camera_info`
+
+Outputs general camera information.
+
+`Type: sensor_msgs/msg/CameraInfo `
+
+* `/image_raw`
 
 Outputs images from taken from the bluefox2 camera.
 
 `Type: sensor_msgs/msg/Image `
 
 Complementary topics are:
-/camera/image_raw/compressed
-/camera/image_raw/compressedDepth
-/camera/image_raw/theora
+/image_raw/compressed
+/image_raw/compressedDepth
+/image_raw/theora
 
 * `/diagnostics`
 
-Outputs diagnistic messages based on the *diagnostic_updater* package.
+Outputs diagnostic messages based on the *diagnostic_updater* package.
 
 `Type: diagnostic_msgs/msg/DiagnosticArray`
 
@@ -117,6 +123,7 @@ Included in the 'camera configuration file', and are:
 23. `r_gain` (integer).
 24. `g_gain` (integer).
 25. `b_gain` (integer).
+26. `camera_calibration_file` (string). Path to the camera calibration file. File name format: `calib_'device name'.yaml`.
 
 # Usage
 
@@ -128,7 +135,10 @@ Firstly, the *camera_configuration_file* must be populated with the parameters a
 
 Launches the node that publishes camera images on /camera/image_raw.
 
+```
 ros2 launch bluefox2_ros single_node.launch.py device:='' namespace:=''
+```
+
 Tentative arguments are:
 
 * *device* (or 'device name'). Only used when looking for configuration and calibration file by name. This is, files' name must match whit the name given here.

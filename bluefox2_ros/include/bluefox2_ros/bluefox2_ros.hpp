@@ -43,7 +43,7 @@ class Bluefox2Ros : public rclcpp::Node
 
   // From camera_ros_base.h
   image_transport::ImageTransport it_;
-  image_transport::Publisher image_pub_;
+  image_transport::CameraPublisher camera_pub_;
   std::shared_ptr<camera_info_manager::CameraInfoManager> cinfo_mgr_;
   diagnostic_updater::Updater diagnostic_updater_;
   diagnostic_updater::HeaderlessTopicDiagnostic topic_diagnostic_;
@@ -74,8 +74,6 @@ class Bluefox2Ros : public rclcpp::Node
   double fps_; 
   std::string frame_id_;
   std::string identifier_;
-
-  void Update_msg(sensor_msgs::msg::Image::SharedPtr& msg, sensor_msgs::msg::CameraInfo & camera_info_msg);
 
 };
 
