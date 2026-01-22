@@ -28,7 +28,7 @@ namespace bluefox2 {
                                                                        node_handle_(std::shared_ptr<Bluefox2Ros>(this, [](auto *) {})),
                                                                        it_(node_handle_),
                                                                        diagnostic_updater_(node_handle_),
-                                                                       topic_diagnostic_(prefix.empty() ? "image_raw" : (prefix + "/image_raw"),
+                                                                       topic_diagnostic_(prefix.empty() ? "camera/image_raw" : (prefix + "camera/image_raw"),
                                                                           diagnostic_updater_,
                                                                           diagnostic_updater::FrequencyStatusParam(&fps_, &fps_, 0.1, 10))
   {
@@ -57,14 +57,14 @@ namespace bluefox2 {
     this->declare_parameter("r_gain", rclcpp::PARAMETER_INTEGER);
     this->declare_parameter("g_gain", rclcpp::PARAMETER_INTEGER);
     this->declare_parameter("b_gain", rclcpp::PARAMETER_INTEGER);
-    this->declare_parameter("camera_calibration_file", rclcpp::PARAMETER_STRING);
+    this->declare_parameter("camera_calibration_url", rclcpp::PARAMETER_STRING);
 
     //From camera_ros_base.h   
     rmw_qos_profile_t custom_qos_profile = rmw_qos_profile_sensor_data;
-    camera_pub_ = image_transport::create_camera_publisher(this, "image_raw", custom_qos_profile);
+    camera_pub_ = image_transport::create_camera_publisher(this, "camera/image_raw", custom_qos_profile);
     cinfo_mgr_ = std::make_shared<camera_info_manager::CameraInfoManager>(this);
 
-    auto camera_calibration_file_param_ = this->get_parameter("camera_calibration_file").as_string();
+    auto camera_calibration_file_param_ = this->get_parameter("camera_calibration_url").as_string();
     cinfo_mgr_->loadCameraInfo(camera_calibration_file_param_);
 
     bluefox2_.SetSerial(this->get_parameter("serial").as_string());

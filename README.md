@@ -15,7 +15,7 @@ Contains main source files to communicate with bluefox2 driver API. This package
 
 ### bluefox2_ros
 
-All ROS2-related files are in this folder. It contains the main launcher to run the source code as a unique node. It also contains a configuration folder that stores:
+All ROS2-related files are in this folder. It contains the main launcher to run the source code as a unique node. It also contains a configuration folder that stores (examples included for an MLC205G device):
 
 * *Camera configuration file* (file name format: `camera_'device name'.config.yaml`). Defines all configuration parameters to be loaded as parameters during start-up.
 * *Camera calibration file* (file name format: `calib_'device name'.yaml`). Contains a calibration file for this camera, for example, using the [ROS-perception's image_pipeline package](https://github.com/ros-perception/image_pipeline/tree/rolling).
@@ -24,22 +24,22 @@ All ROS2-related files are in this folder. It contains the main launcher to run 
 
 ### Topics
 
-* `/camera_info`
+* `/camera/camera_info`
 
 Outputs general camera information.
 
 `Type: sensor_msgs/msg/CameraInfo `
 
-* `/image_raw`
+* `/camera/image_raw`
 
 Outputs images from taken from the bluefox2 camera.
 
 `Type: sensor_msgs/msg/Image `
 
 Complementary topics are:
-/image_raw/compressed
-/image_raw/compressedDepth
-/image_raw/theora
+/camera/image_raw/compressed
+/camera/image_raw/compressedDepth
+/camera/image_raw/theora
 
 * `/diagnostics`
 
@@ -123,7 +123,7 @@ Included in the 'camera configuration file', and are:
 23. `r_gain` (integer).
 24. `g_gain` (integer).
 25. `b_gain` (integer).
-26. `camera_calibration_file` (string). Path to the camera calibration file. File name format: `calib_'device name'.yaml`.
+26. `camera_calibration_file` (string). URL containing path to the camera calibration file. File name format: `calib_'device name'.yaml`.
 
 # Usage
 
@@ -133,13 +133,14 @@ Firstly, the *camera_configuration_file* must be populated with the parameters a
 
 ## Launch
 
-Launches the node that publishes camera images on /camera/image_raw.
+Launch the node that publishes camera images on /camera/image_raw.
 
 ```
-ros2 launch bluefox2_ros single_node.launch.py device:='' namespace:=''
+ros2 launch bluefox2_ros single_node.launch.py device:='' namespace:='' calib_url:=''
 ```
 
 Tentative arguments are:
 
-* *device* (or 'device name'). Only used when looking for configuration and calibration file by name. This is, files' name must match whit the name given here.
+* *device* (or 'device name'). Only used when looking for configuration and calibration file by name. This is, files' name must match whit the name given here. E.g.: `MLC205G`.
 * *namespace*. Gives a namespace to the node when running multiple cameras.
+* *calib_url*. URL containing path to the camera calibration file, that will be loaded as parameter to be used by the node. By default, the launch file looks for the file `calib_'device name'.yaml` in the `config` folder once compiled. E.g. `file://.../install/bluefox2_ros/share/bluefox2_ros/config/calib_MLC205G.yaml`
